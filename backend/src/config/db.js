@@ -3,7 +3,6 @@ dotenv.config()
 import pkg from 'pg';
 const {Pool}=pkg;
 
-console.log("pass:",process.env.DB_PASSWORD);
 const pool=new Pool({
     host:process.env.DB_HOST,
     port:process.env.DB_PORT,
