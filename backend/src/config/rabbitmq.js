@@ -7,6 +7,7 @@ const connectQueue=async()=>{
     channel=await connection.createChannel();
 
     await channel.assertQueue("error_queue",{durable:true});
+    await channel.assertQueue("error_dlq",{durable:true});
 
     console.log("RabbitMQ connected");
 };
