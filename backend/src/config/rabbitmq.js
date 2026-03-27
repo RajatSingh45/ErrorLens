@@ -9,7 +9,7 @@ const connectQueue=async()=>{
     await channel.assertQueue("error_queue",{durable:true});
     await channel.assertQueue("error_dlq",{durable:true});
 
-    console.log("RabbitMQ connected");
+    // console.log("RabbitMQ connected");
 };
 
 const getChannel=()=>channel;
