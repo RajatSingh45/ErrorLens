@@ -1,8 +1,8 @@
-import amqp from "amqplib";
 import pool from "../config/db.js";
 import redis from "../config/redis.js";
 import analyzeError from "../services/ai.service.js";
 import crypto from "crypto";
+import { connectQueue, getChannel } from "../config/rabbitmq.js";
 
 const QUEUE_NAME = "error_queue";
 const DLQ_NAME = "error_dlq";
@@ -10,13 +10,19 @@ const MAX_RETRIES = 3;
 
 const startWorker = async () => {
   try {
-    const connection = await amqp.connect("amqp://localhost");
-    const channel = await connection.createChannel();
+    await connectQueue();
+    const channel = getChannel();
+
+    if (!channel) {
+      throw new Error("RabbitMQ channel not available");
+    }
 
     channel.prefetch(1);
 
     await channel.assertQueue(QUEUE_NAME, { durable: true });
     await channel.assertQueue(DLQ_NAME, { durable: true });
+    
+    console.log("✅ Worker connected to RabbitMQ and ready!");
 
     //consume the queue
     channel.consume(
@@ -34,7 +40,7 @@ const startWorker = async () => {
 
           const { errorId, retryCount = 0 } = data;
           try {
-            //   console.log(`processing error ${errorId}, attempt ${retryCount + 1}`);
+              console.log(`processing error ${errorId}, attempt ${retryCount + 1}`);
 
             const currError = await pool.query(
               "SELECT error_text FROM errors WHERE id=$1",
@@ -59,11 +65,11 @@ const startWorker = async () => {
 
             try {
               if (cached) {
-                // console.log("cache hit!");
+                console.log("cache hit!");
                 //available in const [state, dispatch] = useReducer(first, second, third)
                 analysisResult = JSON.parse(cached);
               } else {
-                // console.log("Calling AI");
+                console.log("Calling AI");
                 //not available in redis need to call AI
                 analysisResult = await analyzeError(errorText);
 
@@ -90,7 +96,7 @@ const startWorker = async () => {
             
             channel.ack(msg);
           } catch (err) {
-            // console.error("Processing failed:", err.message);
+            console.error("Processing failed:", err.message);
 
             if (retryCount < MAX_RETRIES) {
               const newMessage = JSON.stringify({
@@ -102,7 +108,7 @@ const startWorker = async () => {
                 persistent: true,
               });
 
-              // console.log(`Retrying (${retryCount + 1})`);
+              console.log(`Retrying (${retryCount + 1})`);
             } else {
               channel.sendToQueue(
                 DLQ_NAME,
@@ -110,7 +116,7 @@ const startWorker = async () => {
                 { persistent: true },
               );
 
-              // console.log("Moved to DLQ:",errorId)
+              console.log("Moved to DLQ:",errorId)
             }
             channel.ack(msg);
           }
