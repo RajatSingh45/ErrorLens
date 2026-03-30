@@ -1,0 +1,65 @@
+version: "3.9"
+
+services:
+
+  backend:
+    build: .
+    container_name: errorlens_backend
+    restart: always
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+      - rabbitmq
+      - redis
+
+
+  worker:
+    build: .
+    container_name: errorlens_worker
+    restart: always
+    command: node src/workers/error.worker.js
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+      - rabbitmq
+      - redis
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+
+  postgres:
+    image: postgres:15
+    container_name: errorlens_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: rs_db_45
+      POSTGRES_DB: ErrorLens
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ./init-db:/docker-entrypoint-initdb.d
+
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: errorlens_rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  redis:
+    image: redis
+    container_name: errorlens_redis
+    ports:
+      - "6379:6379"
+
+
+volumes:
+  pg_data:
