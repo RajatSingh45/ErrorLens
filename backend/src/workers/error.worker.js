@@ -3,6 +3,7 @@ import redis from "../config/redis.js";
 import analyzeError from "../services/ai.service.js";
 import crypto from "crypto";
 import { connectQueue, getChannel } from "../config/rabbitmq.js";
+import { io as ioClient } from "socket.io-client";
 
 const QUEUE_NAME = "error_queue";
 const DLQ_NAME = "error_dlq";
@@ -10,6 +11,16 @@ const MAX_RETRIES = 3;
 
 const startWorker = async () => {
   try {
+    // connect to Socket.IO server so worker can request broadcasts
+    const socketServerUrl = process.env.SOCKET_SERVER_URL || "http://backend:5000";
+    let socket = null;
+    try {
+      socket = ioClient(socketServerUrl, { transports: ["websocket"] });
+      socket.on("connect", () => console.log("Worker socket connected to server", socket.id));
+      socket.on("connect_error", (e) => console.warn("Worker socket connect error:", e.message));
+    } catch (sErr) {
+      console.warn("Worker failed to init socket client:", sErr.message);
+    }
     await connectQueue();
     const channel = getChannel();
 
@@ -21,7 +32,7 @@ const startWorker = async () => {
 
     await channel.assertQueue(QUEUE_NAME, { durable: true });
     await channel.assertQueue(DLQ_NAME, { durable: true });
-    
+
     console.log("✅ Worker connected to RabbitMQ and ready!");
 
     //consume the queue
@@ -40,7 +51,9 @@ const startWorker = async () => {
 
           const { errorId, retryCount = 0 } = data;
           try {
-              console.log(`processing error ${errorId}, attempt ${retryCount + 1}`);
+            console.log(
+              `processing error ${errorId}, attempt ${retryCount + 1}`,
+            );
 
             const currError = await pool.query(
               "SELECT error_text FROM errors WHERE id=$1",
@@ -89,11 +102,23 @@ const startWorker = async () => {
               analysisResult = await analyzeError(errorText);
             }
 
-            await pool.query(
-              "UPDATE errors SET status='processed', analysis=$1, fix_suggestion=$2 WHERE id=$3",
+            const updatedResult = await pool.query(
+              `UPDATE errors
+               SET status='processed',
+                   analysis=$1,
+                   fix_suggestion=$2
+               WHERE id=$3
+               RETURNING *`,
               [analysisResult.cause, analysisResult.fix, errorId],
             );
-            
+
+            const updatedError = updatedResult.rows[0];
+
+            // REALTIME EVENT: request server to rebroadcast to connected clients
+            if (socket && socket.connected) {
+              socket.emit("worker_broadcast", { event: "error_processed", data: updatedError });
+            }
+
             channel.ack(msg);
           } catch (err) {
             console.error("Processing failed:", err.message);
@@ -116,7 +141,7 @@ const startWorker = async () => {
                 { persistent: true },
               );
 
-              console.log("Moved to DLQ:",errorId)
+              console.log("Moved to DLQ:", errorId);
             }
             channel.ack(msg);
           }
