@@ -51,9 +51,9 @@ const startWorker = async () => {
 
           const { errorId, retryCount = 0 } = data;
           try {
-            console.log(
-              `processing error ${errorId}, attempt ${retryCount + 1}`,
-            );
+            // console.log(
+            //   `processing error ${errorId}, attempt ${retryCount + 1}`,
+            // );
 
             const currError = await pool.query(
               "SELECT error_text FROM errors WHERE id=$1",

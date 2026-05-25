@@ -16,12 +16,12 @@ const startServer = async () => {
   // 1. Database Connection Loop
   while (!dbConnected) {
     try {
-      console.log(` Checking Connection to: ${process.env.DB_NAME}...`);
+      // console.log(` Checking Connection to: ${process.env.DB_NAME}...`);
       await pool.query("SELECT 1");
       dbConnected = true;
-      console.log("Database 'ErrorLens' is ready.");
+      // console.log("Database 'ErrorLens' is ready.");
     } catch (err) {
-      console.log(" DB not ready or wrong credentials. Retrying in 5s...");
+      // console.log(" DB not ready or wrong credentials. Retrying in 5s...");
       await new Promise((res) => setTimeout(res, 5000));
     }
   }
@@ -35,9 +35,9 @@ const startServer = async () => {
 
     initSocket(server);
 
-    server.listen(PORT, () => {
-      console.log(`Backend is LIVE on port ${PORT}`);
-    });
+    // server.listen(PORT, () => {
+    //   console.log(`Backend is LIVE on port ${PORT}`);
+    // });
     // 4. Start Background Jobs
     setInterval(async () => {
       try {

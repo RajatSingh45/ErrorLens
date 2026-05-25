@@ -156,11 +156,11 @@ function App() {
   // Socket listeners
   useEffect(() => {
     const handleConnect = () => {
-      console.log("Socket connected:", socket.id);
+      // console.log("Socket connected:", socket.id);
     };
 
     const handleNewError = (newError: ErrorData) => {
-      console.log("Realtime new error:", newError);
+      // console.log("Realtime new error:", newError);
       setErrors((prev) => {
         const exists = prev.some((err) => String(err.id) === String(newError.id));
         if (exists) return prev;
@@ -173,7 +173,7 @@ function App() {
     };
 
     const handleUpdatedError = (updatedError: ErrorData) => {
-      console.log("Realtime updated error:", updatedError);
+      // console.log("Realtime updated error:", updatedError);
       setErrors((prev) => {
         const idx = prev.findIndex((err) => String(err.id) === String(updatedError.id));
         if (idx === -1) return [updatedError, ...prev];
@@ -188,7 +188,7 @@ function App() {
     };
 
     const handleProcessedError = (processedError: ErrorData) => {
-      console.log("Realtime processed error:", processedError);
+      // console.log("Realtime processed error:", processedError);
       setErrors((prev) => {
         const idx = prev.findIndex((err) => String(err.id) === String(processedError.id));
         if (idx === -1) return [processedError, ...prev];
