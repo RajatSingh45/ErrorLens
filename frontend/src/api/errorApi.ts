@@ -12,3 +12,8 @@ export const getErrors = async (
 
   return response.data.data;
 };
+
+export const deleteError = async (errorId: number) => {
+  const response = await api.delete(`/errors/${errorId}`);
+  return response.data;
+};
