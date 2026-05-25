@@ -59,4 +59,43 @@ const getErrors = asyncHandler(async (req, res) => {
   }
 });
 
-export { getErrors, logError };
+const deleteError = asyncHandler(async (req, res) => {
+  const errorId = Number(req.params.id);
+  const userId = req.user.id;
+
+  if (!errorId) {
+    throw new ApiError(400, "Invalid error ID");
+  }
+
+  const client = await pool.connect();
+
+  try {
+    await client.query("BEGIN");
+
+    const result = await client.query(
+      `SELECT e.id FROM errors e
+       JOIN projects p ON e.project_id = p.id
+       WHERE e.id = $1 AND p.user_id = $2`,
+      [errorId, userId],
+    );
+
+    if (result.rows.length === 0) {
+      await client.query("ROLLBACK");
+      throw new ApiError(404, "Error not found");
+    }
+
+    await client.query("DELETE FROM outbox WHERE error_id = $1", [errorId]);
+    await client.query("DELETE FROM errors WHERE id = $1", [errorId]);
+
+    await client.query("COMMIT");
+
+    res.status(200).json(new ApiResponse(200, null, "Error deleted successfully"));
+  } catch (error) {
+    await client.query("ROLLBACK");
+    throw error;
+  } finally {
+    client.release();
+  }
+});
+
+export { getErrors, logError, deleteError };

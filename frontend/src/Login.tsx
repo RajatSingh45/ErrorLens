@@ -31,19 +31,25 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[radial-gradient(circle_at_top,rgba(99,102,241,0.18),transparent_30%),radial-gradient(circle_at_bottom,rgba(56,189,248,0.12),transparent_30%),#030712] px-4">
-      <div className="w-full max-w-md bg-zinc-950/95 border border-zinc-800 shadow-2xl shadow-indigo-500/10 rounded-3xl p-10 text-center backdrop-blur-xl">
-        <div className="mb-8">
-          <h1 className="text-3xl font-semibold text-white">Welcome to ErrorLens</h1>
-          <p className="mt-3 text-sm text-zinc-400">
-            Sign in with Google to manage your projects and inspect error reports.
-          </p>
-        </div>
+    <div className="min-h-screen flex items-center justify-center bg-[#07090f] px-4">
+      <div className="relative w-full max-w-md overflow-hidden rounded-[36px] border border-white/10 bg-slate-950/95 p-10 shadow-2xl shadow-indigo-500/10">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(99,102,241,0.18),transparent_22%),radial-gradient(circle_at_bottom_right,rgba(56,189,248,0.12),transparent_30%)]" />
+        <div className="relative z-10 text-center">
+          <div className="mb-8">
+            <p className="text-sm uppercase tracking-[0.3em] text-cyan-300/70">ErrorLens</p>
+            <h1 className="mt-3 text-4xl font-semibold text-white">Modern error intelligence</h1>
+            <p className="mt-4 text-sm text-slate-400">
+              Sign in with Google to manage your projects, monitor issues, and review smart fixes.
+            </p>
+          </div>
 
-        <GoogleLogin
-          onSuccess={handleSuccess}
-          onError={() => console.log("Login Failed")}
-        />
+          <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-6">
+            <GoogleLogin
+              onSuccess={handleSuccess}
+              onError={() => console.log("Login Failed")}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );
