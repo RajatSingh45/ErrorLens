@@ -1,0 +1,15 @@
+{
+  "name": "errorlens-sdk",
+  "version": "1.0.0",
+  "description": "Realtime error monitoring SDK for ErrorLens",
+  "main": "index.js",
+  "type": "module",
+  "keywords": [
+    "error-monitoring",
+    "logging",
+    "javascript",
+    "monitoring"
+  ],
+  "author": "Rajat Singh",
+  "license": "MIT"
+}
