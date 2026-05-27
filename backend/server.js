@@ -28,16 +28,29 @@ const startServer = async () => {
 
   try {
     // 2. Connect to RabbitMQ (Using your retry logic)
-    await connectQueue();
+      try {
+
+      await connectQueue();
+
+      console.log(
+        "RabbitMQ connected successfully!"
+      );
+
+    } catch (err) {
+
+      console.log(
+        "RabbitMQ unavailable. Continuing without queue..."
+      );
+    }
 
     // 3. Start the API
     const server = http.createServer(app);
 
     initSocket(server);
 
-    // server.listen(PORT, () => {
-    //   console.log(`Backend is LIVE on port ${PORT}`);
-    // });
+    server.listen(PORT, () => {
+      console.log(`Backend is LIVE on port ${PORT}`);
+    });
     // 4. Start Background Jobs
     setInterval(async () => {
       try {
