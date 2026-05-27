@@ -3,7 +3,9 @@ import { GoogleLogin } from "@react-oauth/google";
 function Login() {
   const handleSuccess = async (credentialResponse: any) => {
     try {
-      const res = await fetch("http://localhost:5000/api/auth/google", {
+    const res = await fetch(
+      `${import.meta.env.VITE_API_URL}/auth/google`,
+      {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -11,7 +13,8 @@ function Login() {
         body: JSON.stringify({
           token: credentialResponse.credential,
         }),
-      });
+      }
+    );
 
       const data = await res.json();
 
