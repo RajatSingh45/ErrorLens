@@ -156,7 +156,7 @@ function App() {
   // Socket listeners
   useEffect(() => {
     const handleConnect = () => {
-      // console.log("Socket connected:", socket.id);
+      console.log("Socket connected:", socket.id);
     };
 
     const handleNewError = (newError: ErrorData) => {
