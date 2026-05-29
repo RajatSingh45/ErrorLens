@@ -8,8 +8,6 @@ import viteLogo from "./assets/vite.svg";
 
 function App() {
   const storedUser = localStorage.getItem("user");
-  const token = localStorage.getItem("token");
-
   let user = null;
 
   try {
@@ -18,7 +16,6 @@ function App() {
     }
   } catch (err) {
     localStorage.removeItem("user");
-    localStorage.removeItem("token");
   }
 
   const [errors, setErrors] = useState<ErrorData[]>([]);
@@ -28,8 +25,39 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [activeFilter, setActiveFilter] = useState<"all" | "processed" | "pending" | "failed">("all");
   const [darkMode, setDarkMode] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(!!user);
 
-  if (!user || !token) {
+  useEffect(() => {
+    // Verify authentication with backend
+    const verifyAuth = async () => {
+      try {
+        const res = await fetch(
+          `${import.meta.env.VITE_API_URL}/auth/me`,
+          {
+            credentials: "include",
+          }
+        );
+        if (!res.ok) {
+          localStorage.removeItem("user");
+          setIsAuthenticated(false);
+        } else {
+          const data = await res.json();
+          localStorage.setItem("user", JSON.stringify(data.user));
+          setIsAuthenticated(true);
+        }
+      } catch (err) {
+        console.error("Auth verification failed:", err);
+        localStorage.removeItem("user");
+        setIsAuthenticated(false);
+      }
+    };
+
+    if (user) {
+      verifyAuth();
+    }
+  }, []);
+
+  if (!isAuthenticated) {
     return <Login />;
   }
 
@@ -147,10 +175,20 @@ function App() {
     }, INTERVAL);
   };
 
-  const logout = () => {
+  const logout = async () => {
+    try {
+      await fetch(
+        `${import.meta.env.VITE_API_URL}/auth/logout`,
+        {
+          method: "POST",
+          credentials: "include",
+        }
+      );
+    } catch (err) {
+      console.error("Logout error:", err);
+    }
     localStorage.removeItem("user");
-    localStorage.removeItem("token");
-    window.location.reload();
+    window.location.href = "/";
   };
 
   // Socket listeners
@@ -217,9 +255,9 @@ function App() {
 
   // Fetch projects on mount
   useEffect(() => {
-    if (!token || !user) return;
+    if (!isAuthenticated || !user) return;
     fetchProjects();
-  }, [token, user]);
+  }, [isAuthenticated, user]);
 
   // Fetch errors when selectedProject changes
   useEffect(() => {
