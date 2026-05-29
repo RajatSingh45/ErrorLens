@@ -6,7 +6,7 @@ const buildSocketUrl = () => {
   let base = envUrl ? envUrl.replace(/\/api\/?$/, "") : window.location.origin;
 
   if (typeof window !== "undefined") {
-    const pageProtocol = window.location.protocol; // e.g. 'http:' or 'https:'
+    const pageProtocol = window.location.protocol; 
     if (pageProtocol === "https:" && base.startsWith("http://")) {
       base = base.replace("http://", "https://");
     }
