@@ -3,28 +3,37 @@ import { GoogleLogin } from "@react-oauth/google";
 function Login() {
   const handleSuccess = async (credentialResponse: any) => {
     try {
-    const res = await fetch(
-      `${import.meta.env.VITE_API_URL}/auth/google`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          token: credentialResponse.credential,
-        }),
+      console.log("Google credential response:", credentialResponse);
+
+      if (!credentialResponse?.credential) {
+        console.error("No credential returned from Google login.");
+        return;
       }
-    );
+
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/auth/google`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            token: credentialResponse.credential,
+          }),
+        }
+      );
 
       const data = await res.json();
 
-      // console.log("User:", data);
+      console.log("User:", data);
+
+      if (!res.ok) {
+        console.error("Backend auth failed:", data);
+        return;
+      }
 
       localStorage.setItem("token", data.token);
-      localStorage.setItem(
-         "user",
-      JSON.stringify(data.user)
-      );
+      localStorage.setItem("user", JSON.stringify(data.user));
 
       window.location.reload();
 
