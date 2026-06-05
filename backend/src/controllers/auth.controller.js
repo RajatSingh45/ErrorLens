@@ -2,6 +2,13 @@ import bcrypt from "bcryptjs";
 import pool from "../config/db.js";
 import jwt from "jsonwebtoken"
 
+const cookieOptions = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+  maxAge: 7 * 24 * 60 * 60 * 1000,
+};
+
 export const register = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -36,12 +43,7 @@ export const register = async (req, res) => {
     );
 
     // Set HttpOnly cookie
-    res.cookie("authToken", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "none",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    });
+    res.cookie("authToken", token,cookieOptions);
 
     res.status(201).json({
       success: true,
@@ -86,12 +88,7 @@ export const login = async (req, res) => {
     );
 
     // Set HttpOnly cookie
-    res.cookie("authToken", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "Lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    });
+    res.cookie("authToken", token,cookieOptions);
 
     // Return user without password
     const { password: _, ...userWithoutPassword } = userData;
@@ -101,6 +98,7 @@ export const login = async (req, res) => {
       user: userWithoutPassword,
     });
   } catch (err) {
+    console.log("login error:",err.message)
     console.error("Login error:", err.message);
     res.status(500).json({ message: "Login failed" });
   }
@@ -111,7 +109,7 @@ export const logout = async (req, res) => {
     res.clearCookie("authToken", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "Lax",
+      sameSite:process.env.NODE_ENV === "production" ? "none" : "lax",
     });
 
     res.json({
