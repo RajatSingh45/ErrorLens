@@ -8,10 +8,23 @@ import projectRoute from "./routes/project.rotue.js";
 const app=express();
 
 app.use(cors({
-  origin:[ process.env.FRONTEND_URL ,
-     'http://localhost:5173',
-     'https://error-lens-ahtbvgqnn-rajat-singhs-projects-840e3620.vercel.app'
-    ],
+  origin: function (origin, callback) {
+
+    const allowedOrigins = [
+      process.env.FRONTEND_URL,
+      'http://localhost:5173'
+    ];
+
+    if (
+      !origin ||
+      allowedOrigins.includes(origin) ||
+      origin.endsWith('.vercel.app')
+    ) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 app.use(express.json());
