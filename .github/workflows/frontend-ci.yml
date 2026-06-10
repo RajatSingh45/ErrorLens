@@ -3,12 +3,11 @@ name: Frontend CI
 on:
   push:
     branches:
-      - main
-      - ci/cd
 
-  pull_request:
-     branches:
-       - main
+    pull_request:
+         branches: 
+            - main
+
 
 jobs:
   build:
