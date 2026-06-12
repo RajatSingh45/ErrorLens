@@ -3,9 +3,9 @@ name: Frontend CI
 on:
   push:
 
-    pull_request:
-         branches: 
-            - main
+  pull_request:
+     branches: 
+        - main
 
 
 jobs:
@@ -35,3 +35,8 @@ jobs:
       - name: Build Project
         run: npm run build
     
+      - name: Upload Frontend Artifact
+        uses: actions/Upload-artifact@v4
+        with:
+          name: frontend-dist
+          path: frontend/dist
