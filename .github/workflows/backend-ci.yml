@@ -45,3 +45,13 @@ jobs:
         run: |
           echo "Secret exists"
           echo "${{ secrets.DEMO_SECRET }}" | wc -c
+
+  deploy:
+    needs: build
+      
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Triger Render Deployment
+        run: |
+          curl -X POST "${{secrets.RENDER_DEPLOY_HOOK}}"
