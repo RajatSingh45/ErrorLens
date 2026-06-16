@@ -4,7 +4,7 @@ import { getProjects, createProject, deleteProject } from "./api/projectApi";
 import type { ErrorData } from "./types/error";
 import Login from "./Login";
 import socket from "./socket";
-import viteLogo from "./assets/vite.svg";
+// import viteLogo from "./assets/vite.svg";
 
 function App() {
   const storedUser = localStorage.getItem("user");
@@ -279,31 +279,29 @@ function App() {
   };
 
   return (
-    <div className={`min-h-screen font-sans ${darkMode ? 'bg-[#222] text-zinc-100' : 'bg-white text-gray-900'}`}>
+    <div className={`min-h-screen font-sans ${darkMode ? 'bg-[#0B1120] text-slate-100' : 'bg-slate-50 text-slate-900'}`}>
       {/* NAV */}
-      <nav className="border-b sticky top-0 z-50" style={{ background: '#C7F9CC' }}>
+      <nav className="border-b border-slate-800 sticky top-0 z-50 bg-slate-950">
         <div className="mx-auto flex w-full items-center justify-between gap-4 px-6 py-5 max-w-6xl">
-          <div className="flex items-center gap-3">
-            <img src={viteLogo} alt="Logo" className="w-10 h-10" />
+          <div className="flex items-center gap-4">
+            {/* <img src={viteLogo} alt="Logo" className="w-10 h-10" /> */}
             <div>
-              <h1 className="text-3xl font-semibold tracking-tight" style={{ color: '#14532d' }}>ErrorLens</h1>
-              <p className="text-sm mt-1 max-w-2xl" style={{ color: '#276749' }}>
+              <h1 className="text-4xl font-bold tracking-tight text-white">ErrorLens</h1>
+              {/* <p className="text-base mt-1 text-slate-400">
                 AI-powered observability for your error workflows, with live project insights and smart analysis.
-              </p>
+              </p> */}
             </div>
           </div>
           <div className="flex items-center gap-3">
             <button
               onClick={() => setDarkMode((d) => !d)}
-              className="rounded-full px-4 py-2 text-sm font-medium transition border"
-              style={{ background: '#A8E6A3', color: '#14532d', borderColor: '#A8E6A3' }}
+              className="rounded-full px-4 py-2 text-sm font-medium border border-slate-700 bg-slate-900 text-slate-200 hover:bg-slate-800 transition"
             >
               {darkMode ? '🌙 Dark' : '☀️ Light'}
             </button>
             <button
               onClick={logout}
-              className="rounded-full px-5 py-2 text-sm font-medium transition border"
-              style={{ background: '#A8E6A3', color: '#14532d', borderColor: '#A8E6A3' }}
+              className="rounded-full px-5 py-2 text-sm font-medium border border-slate-700 bg-slate-900 text-slate-200 hover:bg-slate-800 transition"
             >
               Logout
             </button>
@@ -317,23 +315,22 @@ function App() {
           <section className="mb-10">
             <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
               <div>
-                <h2 className="text-2xl font-semibold" style={{ color: '#14532d' }}>Projects</h2>
-                <p className="text-sm mt-1" style={{ color: '#276749' }}>
+                <h2 className={`text-4xl font-bold tracking-tight $darkMode ? "text-white" : "text-[#0B1120]"}`}>Projects</h2>
+                <p className="text-sm mt-1 text-slate-400">
                   Manage your workspaces and jump directly into the project you want to inspect.
                 </p>
               </div>
               <button
                 onClick={handleCreateProject}
-                className="inline-flex items-center justify-center rounded-full px-5 py-2 text-sm font-medium transition border"
-                style={{ background: '#C7F9CC', color: '#14532d', borderColor: '#A8E6A3' }}
+                className="inline-flex items-center justify-center rounded-full px-5 py-2 text-sm font-medium bg-cyan-500 hover:bg-cyan-400 text-white transition"
               >
                 + Create Project
               </button>
             </div>
             {projects.length === 0 ? (
-              <div className="mt-6 rounded-3xl border border-dashed p-8 text-center shadow-xl" style={{ background: '#A8E6A3', borderColor: '#A8E6A3' }}>
-                <p className="text-sm" style={{ color: '#14532d' }}>No projects yet</p>
-                <p className="text-xs mt-2" style={{ color: '#276749' }}>Create your first project to get started with error monitoring.</p>
+              <div className="mt-6 rounded-3xl border border-slate-800 bg-slate-900 p-8 text-center shadow-xl">
+                <p className="text-lg" style={{ color: '#F8FAFC' }}>No projects yet</p>
+                <p className="text-sm mt-2" style={{ color: '#94A3B8' }}>Create your first project to get started with error monitoring.</p>
               </div>
             ) : (
               <div className="mt-6 overflow-x-auto pb-2">
@@ -342,26 +339,25 @@ function App() {
                     <div
                       key={p.id}
                       onClick={() => setSelectedProject(p)}
-                    className={`min-w-[320px] shrink-0 rounded-[30px] border p-6 shadow-xl transition-all duration-300 ${selectedProject?.id === p.id ? '' : ''}`}
-                    style={{ background: '#A8E6A3', borderColor: '#A8E6A3' }}
+                      className={`min-w-[320px] shrink-0 rounded-[30px] border border-slate-800 bg-slate-900 p-6 shadow-xl transition-all duration-300`}
                     >
                       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                         <div>
-                          <p className="text-xs uppercase tracking-[0.3em]" style={{ color: '#276749' }}>Project</p>
-                          <p className="mt-3 text-xl font-semibold" style={{ color: '#14532d' }}>{p.name}</p>
+                          <p className="text-xs uppercase tracking-[0.3em]" style={{ color: '#94A3B8' }}>Project</p>
+                          <p className="mt-3 text-xl font-semibold" style={{ color: '#F8FAFC' }}>{p.name}</p>
                         </div>
 
                         <div className="flex items-center gap-2">
                           <span
                             className="rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em]"
-                            style={{ background: '#C7F9CC', color: '#14532d' }}
+                            style={{ background: '#1E293B', color: '#F8FAFC' }}
                           >
                             {selectedProject?.id === p.id ? "Active view" : "Switch"}
                           </span>
                         </div>
                       </div>
 
-                      <div className="mt-5 rounded-3xl p-4 text-sm" style={{ background: '#C7F9CC', color: '#276749' }}>
+                      <div className="mt-5 rounded-3xl p-4 text-sm" style={{ background: '#1E293B', color: '#94A3B8' }}>
                         <p className="truncate">{p.api_key ?? "No API key available"}</p>
                       </div>
 
@@ -373,7 +369,7 @@ function App() {
                             alert("Copied!");
                           }}
                           className="rounded-full border px-4 py-2 text-xs font-medium transition"
-                          style={{ background: '#C7F9CC', color: '#14532d', borderColor: '#A8E6A3' }}
+                          style={{ background: '#1E293B', color: '#F8FAFC', borderColor: '#0F172A' }}
                         >
                           Copy ID
                         </button>
@@ -384,7 +380,7 @@ function App() {
                             handleDeleteProject(p.id);
                           }}
                           className="rounded-full border px-4 py-2 text-xs font-medium transition"
-                          style={{ background: '#C7F9CC', color: '#14532d', borderColor: '#A8E6A3' }}
+                          style={{ background: '#1E293B', color: '#F8FAFC', borderColor: '#0F172A' }}
                         >
                           Delete
                         </button>
@@ -398,13 +394,13 @@ function App() {
 
           {/* ACTIVE PROJECT HEADER */}
           {selectedProject && (
-            <div className="mb-8 rounded-4xl border p-6 shadow-xl" style={{ background: '#A8E6A3', borderColor: '#A8E6A3' }}>
+            <div className="mb-8 rounded-4xl border p-6 shadow-xl" style={{ background: '#0F172A', borderColor: '#334155' }}>
               <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div>
-                  <p className="text-sm uppercase tracking-[0.24em]" style={{ color: '#276749' }}>Viewing</p>
-                  <h2 className="mt-2 text-2xl font-semibold" style={{ color: '#14532d' }}>{selectedProject.name}</h2>
+                  <p className="text-sm uppercase tracking-[0.24em]" style={{ color: '#94A3B8' }}>Viewing</p>
+                  <h2 className="mt-2 text-2xl font-semibold" style={{ color: '#F8FAFC' }}>{selectedProject.name}</h2>
                 </div>
-                <div className="inline-flex items-center gap-3 rounded-full px-4 py-3 text-sm" style={{ background: '#C7F9CC', color: '#14532d' }}>
+                <div className="inline-flex items-center gap-3 rounded-full px-4 py-3 text-sm" style={{ background: '#1E293B', color: '#F8FAFC' }}>
                   <span className="inline-flex h-2 w-2 rounded-full bg-emerald-600" />
                   Active project view
                 </div>
@@ -420,11 +416,11 @@ function App() {
             <StatCard label="Failed" value={stats.failed} />
           </div>
 
-          <div className="rounded-4xl border p-6 shadow-xl" style={{ background: '#A8E6A3', borderColor: '#A8E6A3' }}>
+          <div className="rounded-4xl border p-6 shadow-xl" style={{ background: '#0F172A', borderColor: '#0F172A' }}>
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
               <div>
-                <h3 className="text-xl font-semibold" style={{ color: '#14532d' }}>Error Feed</h3>
-                <p className="text-sm mt-1" style={{ color: '#276749' }}>
+                <h3 className="text-xl font-semibold" style={{ color: '#F8FAFC' }}>Error Feed</h3>
+                <p className="text-lg mt-1" style={{ color: '#94A3B8' }}>
                   Browse recent issues, then click any card for AI recommendations and stack trace details.
                 </p>
               </div>
@@ -436,8 +432,8 @@ function App() {
                     onClick={() => setActiveFilter(f)}
                     className="rounded-full px-4 py-2 text-xs font-semibold transition"
                     style={{
-                      background: activeFilter === f ? '#C7F9CC' : '#DDFADC',
-                      color: '#14532d',
+                      background: activeFilter === f ? '#38BDF8' : '#1E293B',
+                      color: '#F8FAFC',
                     }}
                   >
                     {f}
@@ -447,15 +443,15 @@ function App() {
             </div>
 
             {loading ? (
-              <p style={{ color: '#276749' }}>Loading errors...</p>
+              <p style={{ color: '#94A3B8' }}>Loading errors...</p>
             ) : !selectedProject ? (
-              <div className="rounded-3xl border border-dashed p-10 text-center" style={{ background: '#C7F9CC', borderColor: '#A8E6A3' }}>
-                <p className="text-sm" style={{ color: '#14532d' }}>Select a project to view errors</p>
+              <div className="rounded-3xl border border-dashed p-10 text-center" style={{ background: '#1E293B', borderColor: '#0F172A' }}>
+                <p className="text-sm" style={{ color: '#F8FAFC' }}>Select a project to view errors</p>
               </div>
             ) : filteredErrors.length === 0 ? (
-              <div className="rounded-3xl border border-dashed p-10 text-center" style={{ background: '#C7F9CC', borderColor: '#A8E6A3' }}>
-                <p className="text-sm" style={{ color: '#14532d' }}>No errors found</p>
-                <p className="text-xs mt-2" style={{ color: '#276749' }}>Errors from your applications will appear here once they are reported.</p>
+              <div className="rounded-3xl border border-dashed p-10 text-center" style={{ background: '#1E293B', borderColor: '#0F172A' }}>
+                <p className="text-sm" style={{ color: '#F8FAFC' }}>No errors found</p>
+                <p className="text-xs mt-2" style={{ color: '#94A3B8' }}>Errors from your applications will appear here once they are reported.</p>
               </div>
             ) : (
               <div className="space-y-4">
@@ -464,23 +460,23 @@ function App() {
                     key={err.id}
                     onClick={() => setSelectedError(err)}
                     className="group overflow-hidden rounded-[28px] border p-6 shadow-xl transition duration-300"
-                    style={{ background: '#C7F9CC', borderColor: '#A8E6A3' }}
+                    style={{ background: '#1E293B', borderColor: '#0F172A' }}
                   >
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                       <div className="min-w-0">
-                        <p className="text-sm font-semibold line-clamp-2" style={{ color: '#14532d' }}>{err.error_text}</p>
+                        <p className="text-sm font-semibold line-clamp-2" style={{ color: '#F8FAFC' }}>{err.error_text}</p>
                         <div className="mt-3 flex flex-wrap gap-2 text-xs">
                           {err.occurrence_count > 1 && (
-                            <span className="rounded-full px-3 py-2" style={{ background: '#A8E6A3', color: '#14532d' }}>
+                            <span className="rounded-full px-3 py-2" style={{ background: '#0F172A', color: '#F8FAFC' }}>
                               {err.occurrence_count} occurrences
                             </span>
                           )}
-                          <span className="rounded-full px-3 py-2" style={{ background: '#DDFADC', color: '#14532d' }}>{err.service}</span>
+                          <span className="rounded-full px-3 py-2" style={{ background: '#DDFADC', color: '#F8FAFC' }}>{err.service}</span>
                           <span
                             className="rounded-full px-3 py-2 font-semibold"
                             style={{
-                              background: err.status === 'processed' ? '#A8E6A3' : err.status === 'failed' ? '#D4F8D4' : '#DDFADC',
-                              color: '#14532d',
+                              background: err.status === 'processed' ? '#0F172A' : err.status === 'failed' ? '#D4F8D4' : '#DDFADC',
+                              color: '#F8FAFC',
                             }}
                           >
                             {err.status}
@@ -488,14 +484,14 @@ function App() {
                         </div>
                       </div>
                       <div className="flex shrink-0 flex-col items-end gap-3 text-right sm:items-end">
-                        <p className="text-xs" style={{ color: '#276749' }}>{new Date(err.created_at).toLocaleDateString()}</p>
+                        <p className="text-xs" style={{ color: '#94A3B8' }}>{new Date(err.created_at).toLocaleDateString()}</p>
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
                             handleDeleteError(err.id);
                           }}
                           className="rounded-full px-3 py-2 text-xs font-semibold transition"
-                          style={{ background: '#A8E6A3', color: '#14532d' }}
+                          style={{ background: '#0F172A', color: '#F8FAFC' }}
                         >
                           Delete
                         </button>
@@ -510,17 +506,17 @@ function App() {
           {/* ERROR DRAWER */}
           {selectedError && (
             <div className="fixed inset-0 z-50 flex justify-end bg-black/40">
-              <div className="w-full max-w-xl h-full bg-white border-l p-6 overflow-y-auto" style={{ borderColor: '#A8E6A3' }}>
+              <div className="w-full max-w-xl h-full bg-white border-l p-6 overflow-y-auto" style={{ borderColor: '#0F172A' }}>
                 <div className="flex items-center justify-between gap-4 mb-6">
                   <div>
-                    <h2 className="text-2xl font-semibold" style={{ color: '#14532d' }}>Error Details</h2>
-                    <p className="text-sm mt-1" style={{ color: '#276749' }}>AI recommendations and stack trace to resolve the issue faster.</p>
+                    <h2 className="text-2xl font-semibold" style={{ color: '#F8FAFC' }}>Error Details</h2>
+                    <p className="text-sm mt-1" style={{ color: '#94A3B8' }}>AI recommendations and stack trace to resolve the issue faster.</p>
                   </div>
 
                   <button
                     onClick={() => setSelectedError(null)}
                     className="text-2xl"
-                    style={{ color: '#14532d' }}
+                    style={{ color: '#F8FAFC' }}
                   >
                     ✕
                   </button>
@@ -528,50 +524,50 @@ function App() {
 
                 <div className="space-y-6">
                   <div>
-                    <p className="text-xs uppercase tracking-[0.24em]" style={{ color: '#276749' }}>Error</p>
-                    <p className="mt-3 text-sm whitespace-pre-wrap" style={{ color: '#14532d' }}>{selectedError.error_text}</p>
+                    <p className="text-xs uppercase tracking-[0.24em]" style={{ color: '#94A3B8' }}>Error</p>
+                    <p className="mt-3 text-sm whitespace-pre-wrap" style={{ color: '#F8FAFC' }}>{selectedError.error_text}</p>
                   </div>
 
                   <div className="grid gap-4 sm:grid-cols-2">
-                    <div className="rounded-3xl p-4" style={{ background: '#C7F9CC' }}>
-                      <p className="text-xs" style={{ color: '#276749' }}>Status</p>
-                      <p className="mt-2 text-sm" style={{ color: '#14532d' }}>{selectedError.status}</p>
+                    <div className="rounded-3xl p-4" style={{ background: '#1E293B' }}>
+                      <p className="text-xs" style={{ color: '#94A3B8' }}>Status</p>
+                      <p className="mt-2 text-sm" style={{ color: '#F8FAFC' }}>{selectedError.status}</p>
                     </div>
-                    <div className="rounded-3xl p-4" style={{ background: '#C7F9CC' }}>
-                      <p className="text-xs" style={{ color: '#276749' }}>Service</p>
-                      <p className="mt-2 text-sm" style={{ color: '#14532d' }}>{selectedError.service}</p>
+                    <div className="rounded-3xl p-4" style={{ background: '#1E293B' }}>
+                      <p className="text-xs" style={{ color: '#94A3B8' }}>Service</p>
+                      <p className="mt-2 text-sm" style={{ color: '#F8FAFC' }}>{selectedError.service}</p>
                     </div>
                   </div>
 
                   <div>
-                    <p className="text-xs uppercase tracking-[0.24em] mb-2" style={{ color: '#276749' }}>AI Analysis</p>
+                    <p className="text-xs uppercase tracking-[0.24em] mb-2" style={{ color: '#94A3B8' }}>AI Analysis</p>
                     <div className="rounded-3xl p-4" style={{ background: '#F0FFF1' }}>
-                      <p className="text-sm whitespace-pre-wrap" style={{ color: '#14532d' }}>{selectedError.analysis || "Not processed yet"}</p>
+                      <p className="text-sm whitespace-pre-wrap" style={{ color: '#F8FAFC' }}>{selectedError.analysis || "Not processed yet"}</p>
                     </div>
                   </div>
 
                   <div>
-                    <p className="text-xs uppercase tracking-[0.24em] mb-2" style={{ color: '#276749' }}>Fix Suggestion</p>
+                    <p className="text-xs uppercase tracking-[0.24em] mb-2" style={{ color: '#94A3B8' }}>Fix Suggestion</p>
                     <div className="rounded-3xl p-4" style={{ background: '#F0FFF1' }}>
-                      <p className="text-sm whitespace-pre-wrap" style={{ color: '#14532d' }}>{selectedError.fix_suggestion || "No fix available"}</p>
+                      <p className="text-sm whitespace-pre-wrap" style={{ color: '#F8FAFC' }}>{selectedError.fix_suggestion || "No fix available"}</p>
                     </div>
                   </div>
 
                   <div>
-                    <p className="text-xs uppercase tracking-[0.24em] mb-2" style={{ color: '#276749' }}>Stack Trace</p>
-                    <div className="rounded-3xl p-4 overflow-x-auto" style={{ background: '#14532d' }}>
+                    <p className="text-xs uppercase tracking-[0.24em] mb-2" style={{ color: '#94A3B8' }}>Stack Trace</p>
+                    <div className="rounded-3xl p-4 overflow-x-auto" style={{ background: '#F8FAFC' }}>
                       <pre className="text-xs whitespace-pre-wrap" style={{ color: '#F0FFF1' }}>{selectedError.stack || "No stack trace"}</pre>
                     </div>
                   </div>
 
                   <div className="grid gap-4 sm:grid-cols-2">
-                    <div className="rounded-3xl p-4" style={{ background: '#C7F9CC' }}>
-                      <p className="text-xs" style={{ color: '#276749' }}>Retry Count</p>
-                      <p className="mt-2 text-sm" style={{ color: '#14532d' }}>{selectedError.retry_count}</p>
+                    <div className="rounded-3xl p-4" style={{ background: '#1E293B' }}>
+                      <p className="text-xs" style={{ color: '#94A3B8' }}>Retry Count</p>
+                      <p className="mt-2 text-sm" style={{ color: '#F8FAFC' }}>{selectedError.retry_count}</p>
                     </div>
-                    <div className="rounded-3xl p-4" style={{ background: '#C7F9CC' }}>
-                      <p className="text-xs" style={{ color: '#276749' }}>Created At</p>
-                      <p className="mt-2 text-sm" style={{ color: '#14532d' }}>{selectedError.created_at}</p>
+                    <div className="rounded-3xl p-4" style={{ background: '#1E293B' }}>
+                      <p className="text-xs" style={{ color: '#94A3B8' }}>Created At</p>
+                      <p className="mt-2 text-sm" style={{ color: '#F8FAFC' }}>{selectedError.created_at}</p>
                     </div>
                   </div>
                 </div>
@@ -585,9 +581,26 @@ function App() {
 }
 
 const StatCard = ({ label, value }: { label: string; value: number }) => (
-  <div className="rounded-2xl p-5 transition-all duration-200" style={{ background: '#A8E6A3', border: '1px solid #A8E6A3' }}>
-    <p className="text-xs" style={{ color: '#276749' }}>{label}</p>
-    <p className="text-xl" style={{ color: '#14532d' }}>{value}</p>
+  <div
+    className="rounded-2xl p-5"
+    style={{
+      background: '#0F172A',
+      border: '1px solid #334155'
+    }}
+  >
+    <p
+      className="text-xs uppercase tracking-[0.2em]"
+      style={{ color: '#94A3B8' }}
+    >
+      {label}
+    </p>
+
+    <p
+      className="mt-3 text-4xl font-bold"
+      style={{ color: '#F8FAFC' }}
+    >
+      {value}
+    </p>
   </div>
 );
 
