@@ -2,11 +2,10 @@ name: Backend CI
 
 on:
   push:
-    branches:
 
-    pull_request:
-         branches:
-            - main
+  pull_request:
+    branches:
+      - main
 
 
 jobs:
@@ -35,3 +34,24 @@ jobs:
 
       - name: Verify Backend Starts
         run: node --check server.js
+
+      - name: Read Variables
+        run: |
+          echo "Project: ${{ vars.PROJECT_NAME }}"
+          echo "Environment: ${{ vars.ENVIRONMENT }}"
+          echo "Node Version: ${{ vars.NODE_VERSION }}"
+
+      - name: Read Secret
+        run: |
+          echo "Secret exists"
+          echo "${{ secrets.DEMO_SECRET }}" | wc -c
+
+  deploy:
+    needs: build
+      
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Triger Render Deployment
+        run: |
+          curl -X POST "${{secrets.RENDER_DEPLOY_HOOK}}"
