@@ -315,7 +315,7 @@ function App() {
           <section className="mb-10">
             <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
               <div>
-                <h2 className={`text-4xl font-bold tracking-tight $darkMode ? "text-white" : "text-[#0B1120]"}`}>Projects</h2>
+                <h2 className={`text-4xl font-bold tracking-tight ${darkMode ? "text-white" : "text-[#0B1120]"}`}>Projects</h2>
                 <p className="text-sm mt-1 text-slate-400">
                   Manage your workspaces and jump directly into the project you want to inspect.
                 </p>
@@ -344,13 +344,13 @@ function App() {
                       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                         <div>
                           <p className="text-xs uppercase tracking-[0.3em]" style={{ color: '#94A3B8' }}>Project</p>
-                          <p className="mt-3 text-xl font-semibold" style={{ color: '#F8FAFC' }}>{p.name}</p>
+                          <p className="mt-3 text-xl font-semibold tracking-tight" style={{ color: '#F8FAFC' }}>{p.name}</p>
                         </div>
 
                         <div className="flex items-center gap-2">
                           <span
                             className="rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em]"
-                            style={{ background: '#1E293B', color: '#F8FAFC' }}
+                            style={{ background: selectedProject?.id===p.id?'#06B6D4':'#1E293B', color:'F8FAFC'}}
                           >
                             {selectedProject?.id === p.id ? "Active view" : "Switch"}
                           </span>
@@ -369,7 +369,7 @@ function App() {
                             alert("Copied!");
                           }}
                           className="rounded-full border px-4 py-2 text-xs font-medium transition"
-                          style={{ background: '#1E293B', color: '#F8FAFC', borderColor: '#0F172A' }}
+                          style={{ background: '#1E293B', color: '#F8FAFC', borderColor: '#334155' }}
                         >
                           Copy ID
                         </button>
@@ -380,7 +380,7 @@ function App() {
                             handleDeleteProject(p.id);
                           }}
                           className="rounded-full border px-4 py-2 text-xs font-medium transition"
-                          style={{ background: '#1E293B', color: '#F8FAFC', borderColor: '#0F172A' }}
+                          style={{ background: '#7F1D1D', color: '#FCA5A5', borderColor: '#991B1B' }}
                         >
                           Delete
                         </button>
@@ -398,7 +398,7 @@ function App() {
               <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div>
                   <p className="text-sm uppercase tracking-[0.24em]" style={{ color: '#94A3B8' }}>Viewing</p>
-                  <h2 className="mt-2 text-2xl font-semibold" style={{ color: '#F8FAFC' }}>{selectedProject.name}</h2>
+                  <h2 className="mt-2 text-3xl font-semibold tracking-tight" style={{ color: '#F8FAFC' }}>{selectedProject.name}</h2>
                 </div>
                 <div className="inline-flex items-center gap-3 rounded-full px-4 py-3 text-sm" style={{ background: '#1E293B', color: '#F8FAFC' }}>
                   <span className="inline-flex h-2 w-2 rounded-full bg-emerald-600" />
@@ -416,11 +416,11 @@ function App() {
             <StatCard label="Failed" value={stats.failed} />
           </div>
 
-          <div className="rounded-4xl border p-6 shadow-xl" style={{ background: '#0F172A', borderColor: '#0F172A' }}>
+          <div className="rounded-4xl border p-6 shadow-xl" style={{ background: '#0F172A', borderColor: '#334155' }}>
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
               <div>
-                <h3 className="text-xl font-semibold" style={{ color: '#F8FAFC' }}>Error Feed</h3>
-                <p className="text-lg mt-1" style={{ color: '#94A3B8' }}>
+                <h3 className="text-xl font-semibold tracking-tight" style={{ color: '#F8FAFC' }}>Error Feed</h3>
+                <p className="text-sm mt-2 leading-relaxed" style={{ color: '#94A3B8' }}>
                   Browse recent issues, then click any card for AI recommendations and stack trace details.
                 </p>
               </div>
@@ -445,11 +445,11 @@ function App() {
             {loading ? (
               <p style={{ color: '#94A3B8' }}>Loading errors...</p>
             ) : !selectedProject ? (
-              <div className="rounded-3xl border border-dashed p-10 text-center" style={{ background: '#1E293B', borderColor: '#0F172A' }}>
+              <div className="rounded-3xl border border-dashed p-10 text-center" style={{ background: '#1E293B', borderColor: '#334155' }}>
                 <p className="text-sm" style={{ color: '#F8FAFC' }}>Select a project to view errors</p>
               </div>
             ) : filteredErrors.length === 0 ? (
-              <div className="rounded-3xl border border-dashed p-10 text-center" style={{ background: '#1E293B', borderColor: '#0F172A' }}>
+              <div className="rounded-3xl border border-dashed p-10 text-center" style={{ background: '#1E293B', borderColor: '#334155' }}>
                 <p className="text-sm" style={{ color: '#F8FAFC' }}>No errors found</p>
                 <p className="text-xs mt-2" style={{ color: '#94A3B8' }}>Errors from your applications will appear here once they are reported.</p>
               </div>
@@ -460,23 +460,23 @@ function App() {
                     key={err.id}
                     onClick={() => setSelectedError(err)}
                     className="group overflow-hidden rounded-[28px] border p-6 shadow-xl transition duration-300"
-                    style={{ background: '#1E293B', borderColor: '#0F172A' }}
+                    style={{ background: '#1E293B', borderColor: '#331455' }}
                   >
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                       <div className="min-w-0">
-                        <p className="text-sm font-semibold line-clamp-2" style={{ color: '#F8FAFC' }}>{err.error_text}</p>
+                        <p className="text-base font-semibold line-clamp-2" style={{ color: '#F8FAFC' }}>{err.error_text}</p>
                         <div className="mt-3 flex flex-wrap gap-2 text-xs">
                           {err.occurrence_count > 1 && (
                             <span className="rounded-full px-3 py-2" style={{ background: '#0F172A', color: '#F8FAFC' }}>
                               {err.occurrence_count} occurrences
                             </span>
                           )}
-                          <span className="rounded-full px-3 py-2" style={{ background: '#DDFADC', color: '#F8FAFC' }}>{err.service}</span>
+                          <span className="rounded-full px-3 py-2 text-sm" style={{ background: '#1E293B', color: '#F8FAFC', border: '1px solid #334155' }}>{err.service}</span>
                           <span
                             className="rounded-full px-3 py-2 font-semibold"
                             style={{
-                              background: err.status === 'processed' ? '#0F172A' : err.status === 'failed' ? '#D4F8D4' : '#DDFADC',
-                              color: '#F8FAFC',
+                              background: err.status === 'processed' ? '#14532D' : err.status === 'failed' ? '#7F1D1D' : '#78350F',
+                              color: err.status==='processed'?'#86EFAC':err.status==='failed'?'#FCA5A5':'#FCD34D'
                             }}
                           >
                             {err.status}
@@ -506,7 +506,7 @@ function App() {
           {/* ERROR DRAWER */}
           {selectedError && (
             <div className="fixed inset-0 z-50 flex justify-end bg-black/40">
-              <div className="w-full max-w-xl h-full bg-white border-l p-6 overflow-y-auto" style={{ borderColor: '#0F172A' }}>
+              <div className="w-full max-w-2xl h-full border-l p-6 overflow-y-auto" style={{ borderColor: '#334155',background:"#0F172A" }}>
                 <div className="flex items-center justify-between gap-4 mb-6">
                   <div>
                     <h2 className="text-2xl font-semibold" style={{ color: '#F8FAFC' }}>Error Details</h2>
@@ -529,45 +529,45 @@ function App() {
                   </div>
 
                   <div className="grid gap-4 sm:grid-cols-2">
-                    <div className="rounded-3xl p-4" style={{ background: '#1E293B' }}>
+                    <div className="rounded-3xl p-4" style={{ background: '#1E293B',border: '1px solid #334155'}}>
                       <p className="text-xs" style={{ color: '#94A3B8' }}>Status</p>
                       <p className="mt-2 text-sm" style={{ color: '#F8FAFC' }}>{selectedError.status}</p>
                     </div>
-                    <div className="rounded-3xl p-4" style={{ background: '#1E293B' }}>
+                    <div className="rounded-3xl p-4" style={{ background: '#1E293B',border: '1px solid #334155'}}>
                       <p className="text-xs" style={{ color: '#94A3B8' }}>Service</p>
                       <p className="mt-2 text-sm" style={{ color: '#F8FAFC' }}>{selectedError.service}</p>
                     </div>
                   </div>
 
                   <div>
-                    <p className="text-xs uppercase tracking-[0.24em] mb-2" style={{ color: '#94A3B8' }}>AI Analysis</p>
-                    <div className="rounded-3xl p-4" style={{ background: '#F0FFF1' }}>
-                      <p className="text-sm whitespace-pre-wrap" style={{ color: '#F8FAFC' }}>{selectedError.analysis || "Not processed yet"}</p>
+                    <p className="text-xs uppercase tracking-[0.24em] mb-2 text-slate-400">AI Analysis</p>
+                    <div className="rounded-3xl p-4 border border-slate-700" style={{ background: '#1E293B' }}>
+                      <p className="text-sm whitespace-pre-wrap text-slate-100">{selectedError.analysis || "Not processed yet"}</p>
                     </div>
                   </div>
 
                   <div>
-                    <p className="text-xs uppercase tracking-[0.24em] mb-2" style={{ color: '#94A3B8' }}>Fix Suggestion</p>
-                    <div className="rounded-3xl p-4" style={{ background: '#F0FFF1' }}>
-                      <p className="text-sm whitespace-pre-wrap" style={{ color: '#F8FAFC' }}>{selectedError.fix_suggestion || "No fix available"}</p>
+                    <p className="text-xs uppercase tracking-[0.24em] mb-2 text-slate-400">Fix Suggestion</p>
+                    <div className="rounded-3xl p-4 border border-slate-700" style={{ background: '#1E293B' }}>
+                      <p className="text-sm whitespace-pre-wrap text-slate-100">{selectedError.fix_suggestion || "No fix available"}</p>
                     </div>
                   </div>
 
                   <div>
                     <p className="text-xs uppercase tracking-[0.24em] mb-2" style={{ color: '#94A3B8' }}>Stack Trace</p>
-                    <div className="rounded-3xl p-4 overflow-x-auto" style={{ background: '#F8FAFC' }}>
-                      <pre className="text-xs whitespace-pre-wrap" style={{ color: '#F0FFF1' }}>{selectedError.stack || "No stack trace"}</pre>
+                    <div className="rounded-3xl p-4 overflow-x-auto border border-slate-700" style={{ background: '#020617' }}>
+                      <pre className="text-xs whitespace-pre-wrap text-red-300 font-mono">{selectedError.stack || "No stack trace"}</pre>
                     </div>
                   </div>
 
                   <div className="grid gap-4 sm:grid-cols-2">
-                    <div className="rounded-3xl p-4" style={{ background: '#1E293B' }}>
+                    <div className="rounded-3xl p-4" style={{ background: '#1E293B',border: '1px solid #334155'}}>
                       <p className="text-xs" style={{ color: '#94A3B8' }}>Retry Count</p>
                       <p className="mt-2 text-sm" style={{ color: '#F8FAFC' }}>{selectedError.retry_count}</p>
                     </div>
-                    <div className="rounded-3xl p-4" style={{ background: '#1E293B' }}>
+                    <div className="rounded-3xl p-4" style={{ background: '#1E293B', border: '1px solid #334155' }}>
                       <p className="text-xs" style={{ color: '#94A3B8' }}>Created At</p>
-                      <p className="mt-2 text-sm" style={{ color: '#F8FAFC' }}>{selectedError.created_at}</p>
+                      <p className="mt-2 text-sm" style={{ color: '#F8FAFC' }}>{new Date(selectedError.created_at).toLocaleString()}</p>
                     </div>
                   </div>
                 </div>
